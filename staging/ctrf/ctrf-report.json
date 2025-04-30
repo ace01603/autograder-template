@@ -1,0 +1,67 @@
+{
+  "results": {
+    "tool": {
+      "name": "playwright"
+    },
+    "summary": {
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "start": 1746024020037,
+      "stop": 1746024022336,
+      "suites": 0
+    },
+    "tests": [
+      {
+        "name": "Submission is in the expected format",
+        "status": "passed",
+        "duration": 720,
+        "start": 1746024020,
+        "stop": 1746024021,
+        "rawStatus": "passed",
+        "tags": [],
+        "type": "e2e",
+        "filePath": "/Users/ae1001/Documents/GitHub/PDM1/autograder-template/staging/autograderTests/runner.spec.js",
+        "retries": 0,
+        "flaky": false,
+        "steps": [],
+        "suite": "chromium > runner.spec.js > Test p5.js sketch",
+        "attachments": [],
+        "stdout": [],
+        "stderr": [],
+        "extra": {
+          "annotations": []
+        }
+      },
+      {
+        "name": "Run output tests",
+        "status": "passed",
+        "duration": 1546,
+        "start": 1746024020,
+        "stop": 1746024021,
+        "rawStatus": "passed",
+        "tags": [],
+        "type": "e2e",
+        "filePath": "/Users/ae1001/Documents/GitHub/PDM1/autograder-template/staging/autograderTests/runner.spec.js",
+        "retries": 0,
+        "flaky": false,
+        "steps": [
+          {
+            "name": "Your canvas is the expected size.",
+            "status": "passed"
+          }
+        ],
+        "suite": "chromium > runner.spec.js > Test p5.js sketch",
+        "attachments": [],
+        "stdout": [],
+        "stderr": [],
+        "extra": {
+          "annotations": []
+        }
+      }
+    ]
+  }
+}
