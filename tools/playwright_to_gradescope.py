@@ -41,22 +41,8 @@ def main():
         with open(args.input,'r') as json_data:
             playwright_data = json.load(json_data)
     
-    # assertions = playwright_data["results"]["tests"] # list(flatten(map(lambda x:x["assertionResults"], playwright_data["testResults"])))
-    
-    gradescope_tests = flatten_playwright_results(playwright_data["results"]["tests"]) # list(map(playwright_assertion_to_gradescope, assertions))
+    gradescope_tests = flatten_playwright_results(playwright_data["results"]["tests"])
 
-    # if not playwright_data["success"]:
-    #     messages = "\n".join(list(map(lambda x:x["message"].replace("\"","\\\""), playwright_data["testResults"])))
-        
-    #     gradescope_tests.append({
-    #             "name": "jest test failed",
-    #             "max_score": 1,
-    #             "score": 0, 
-    #             "output": messages
-    #     })
-
-    # print("jest_data",json.dumps(playwright_data, indent=2))
-    # print("asssertions",json.dumps(assertions, indent=2))
     print("gradescope_tests",json.dumps(gradescope_tests, indent=2))
 
     if args.output != None:
