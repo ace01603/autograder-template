@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sketch Test</title>
+
+    <script src="p5js/p5.min.js"></script>
+    <script src="p5js/p5.sound.min.js"></script>
+  </head>
+
+  <body>
+    <p id="test-status"></p>
+    <script src="testingDependencies/preload.js"></script>
+    <!-- Script src is relative to the *staging* folder when the tests are run -->
+    <script src="singleSketch/sketch.js"></script>
+    <script src="testingDependencies/test-utils.js" type="module"></script>
+    <!-- This should point to the p5.js test file for this specific sketch -->
+    <script src="singleSketch/testFile.js" type="module"></script>
+  </body>
+</html>

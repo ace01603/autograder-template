@@ -957,6 +957,12 @@ export class TestResults {
         }
     }
 
+    static #cleanHTML(message) {
+        const open = "<code>";
+        const close = "</code>";
+        return message.replaceAll(open, "").replaceAll(close, "");
+    }
+
     static display(div) {
         this.#clearResultOutput(div);
         this.#createResultSection(div, this.passed, "Checks passed:", "fa-check");
@@ -968,7 +974,7 @@ export class TestResults {
         this.passed.push(message);
         this.playwright.push({
             status: "passed",
-            message
+            message: this.#cleanHTML(message)
         });
     }
 
@@ -976,7 +982,7 @@ export class TestResults {
         this.failed.push(message);
         this.playwright.push({
             status: "failed",
-            message
+            message: this.#cleanHTML(message)
         });
     }
 

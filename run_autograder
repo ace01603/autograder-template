@@ -37,16 +37,13 @@ copy_student_directory () {
     DIR_TO_COPY=$1
     DESTINATION_JAVA_SRC=$2
 
-    if [ "$CONFIG_TEST_STUDENT_MAIN" = true ] ; then
-        # STUDENT_SUBMISSION_JAVA_SRC=$(find . -path "*/$DIR_TO_COPY");
+    if [ "$CONFIG_TEST_SINGLE_SKETCH" = true ] ; then
         STUDENT_SUBMISSION_JAVA_SRC=$(find . -path "*/sketch.js"); # just copy the sketch file
         if [ -n "$STUDENT_SUBMISSION_JAVA_SRC" ]
         then
-            # echo "[GS] Found student $DIR_TO_COPY directory at $STUDENT_SUBMISSION_JAVA_SRC";
-            echo "  [GS] Copying $STUDENT_SUBMISSION_JAVA_SRC to $DESTINATION_JAVA_SRC";
-            # rm -rf $DESTINATION_JAVA_SRC/*
-            rm -rf $DESTINATION_JAVA_SRC/sketch.js
-            cp -r $STUDENT_SUBMISSION_JAVA_SRC $DESTINATION_JAVA_SRC/
+            echo "  [GS] Copying $STUDENT_SUBMISSION_JAVA_SRC to $DESTINATION_JAVA_SRC/singleSketch";
+            rm -rf $DESTINATION_JAVA_SRC/singleSketch/sketch.js
+            cp -r $STUDENT_SUBMISSION_JAVA_SRC $DESTINATION_JAVA_SRC/singleSketch
             echo "  [GS] Copy complete!"
 
         else
@@ -55,6 +52,12 @@ copy_student_directory () {
         fi
     else
         echo "[GS] Don't know how to handle multiple sketch submissions yet!"
+        ### GENERAL STEPS
+        # Create a multiSketch folder
+        # Inside multiSketch, create folders for each sketch, which each contain an index.html and assets folder (check VLE for name)
+        # To copy, find all folder names in sketch
+        # Search for matching folders in student submission
+        # Copy sketch.js and contents of assets folder
     fi
 }
 
@@ -67,7 +70,8 @@ rm -rf "$DIR"/staging/node_modules
 
 npm install
 
-npx playwright install
+# npx playwright install
+npx playwright install --with-deps chromium
 npx playwright test
 
 python3 $PLAYWRIGHT_JSON_TOOL -i ctrf/ctrf-report.json -o "$OUTPUT_DIR"/"results.json"
