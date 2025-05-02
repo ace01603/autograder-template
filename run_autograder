@@ -9,6 +9,8 @@ DIR="/autograder/source"
 OUTPUT_DIR="/autograder/results"
 STUDENT_SUBMISSION_DIR="/autograder/submission"
 PLAYWRIGHT_JSON_TOOL="$DIR/tools/playwright_to_gradescope.py"
+SINGLE_SKETCH="/singleSketch"
+MULTI_SKETCH="/multiSketch"
 
 source "$DIR"/grading.config
 
@@ -31,38 +33,94 @@ find . -name "__MACOSX" -exec rm -rf {} \;
 # Remove old results.json files
 rm -r "$OUTPUT_DIR"/*.json
 
-# Searches student code for a DIR_TO_COPY($1), and copies it to DESTINATION_JAVA_SRC($2)
-# Called below
-copy_student_directory () {
-    DIR_TO_COPY=$1
-    DESTINATION_JAVA_SRC=$2
-
-    if [ "$CONFIG_TEST_SINGLE_SKETCH" = true ] ; then
-        STUDENT_SUBMISSION_JAVA_SRC=$(find . -path "*/sketch.js"); # just copy the sketch file
-        if [ -n "$STUDENT_SUBMISSION_JAVA_SRC" ]
-        then
-            echo "  [GS] Copying $STUDENT_SUBMISSION_JAVA_SRC to $DESTINATION_JAVA_SRC/singleSketch";
-            rm -rf $DESTINATION_JAVA_SRC/singleSketch/sketch.js
-            cp -r $STUDENT_SUBMISSION_JAVA_SRC $DESTINATION_JAVA_SRC/singleSketch
-            echo "  [GS] Copy complete!"
-
-        else
-            echo "[GS] Could not find "$DIR_TO_COPY" in unpacked student submission ("$STUDENT_SUBMISSION_DIR"). Exiting...";
-
-        fi
+find_and_copy_sketch() {
+    PATH_TO_FILES=$1 # The path to the file to search e.g. */sketch_folder or *
+    COPY_TO=$2 # The path in the staging area that the submission file should be copied to
+    # Search for the sketch first
+    echo "[GS] Copy from $PATH_TO_FILES to $COPY_TO"
+    #STUDENT_SKETCH=$(find . -path $PATH_TO_FILES)
+    STUDENT_SKETCH=$(find -path "*/$PATH_TO_FILES") 
+    # for multi, zipped inside folder > no -path
+    # for single, submit just sketch.js > -path > tested with new command, works
+    # for single, zipped folder > no -path > tested with new command, works
+    if [ -n "$STUDENT_SKETCH" ]
+    then
+        echo " [GS] Copying $STUDENT_SKETCH to $COPY_TO";
+        rm -rf $COPY_TO/sketch.js
+        cp -r $STUDENT_SKETCH $COPY_TO
+        echo " [GS] Copy complete!"
     else
-        echo "[GS] Don't know how to handle multiple sketch submissions yet!"
-        ### GENERAL STEPS
-        # Create a multiSketch folder
-        # Inside multiSketch, create folders for each sketch, which each contain an index.html and assets folder (check VLE for name)
-        # To copy, find all folder names in sketch
-        # Search for matching folders in student submission
-        # Copy sketch.js and contents of assets folder
+        echo "[GS] Could not find $PATH_TO_FILES to copy in unpacked student submission"
     fi
 }
 
-DIRECTORY_SOUGHT="" # top level? Will only work for single sketch
-copy_student_directory "$DIRECTORY_SOUGHT" "$DIR"/staging # /${DIRECTORY_SOUGHT}
+# Searches student code and copies it to STAGING($2)
+# copy_student_directory () {
+#     # set source to include single / multi sketch folder name
+#     STAGING=$1
+
+#     if [ "$CONFIG_TEST_SINGLE_SKETCH" = true ] ; then
+#         STUDENT_SKETCH=$(find . -path "*/sketch.js"); # just copy the sketch file
+#         COMPLETE_STAGING="$STAGING$SINGLE_SKETCH"
+#         if [ -n "$STUDENT_SKETCH" ]
+#         then
+#             echo "  [GS] Copying $STUDENT_SKETCH to $COMPLETE_STAGING";
+#             rm -rf $COMPLETE_STAGING/sketch.js
+#             cp -r $STUDENT_SKETCH $COMPLETE_STAGING
+#             echo "  [GS] Copy complete!"
+
+#         else
+#             echo "[GS] Could not find sketch.js to copy in unpacked student submission ("$STUDENT_SUBMISSION_DIR"). Exiting...";
+
+#         fi
+#     else
+#         COMPLETE_STAGING="$STAGING$MULTI_SKETCH"
+#         echo "[GS] Looking for sketch folders in "$COMPLETE_STAGING""
+#         for FILE in $COMPLETE_STAGING/*; do
+#             echo "[GS] checking "$FILE""
+#             if [ -d $FILE ]
+#             then
+#                 SKETCH_FOLDER="$(basename -- $FILE)"
+#                 echo "[GS] searching for "$SKETCH_FOLDER" sketch in student submission"
+#                 STUDENT_SKETCH_IN_FOLDER=$(find . -path "*/"$SKETCH_FOLDER"/sketch.js");
+#                 if [ -n "$STUDENT_SKETCH_IN_FOLDER" ]
+#                 then
+#                     echo "  [GS] Copying $STUDENT_SKETCH_IN_FOLDER to $COMPLETE_STAGING"$SKETCH_FOLDER"/";
+#                     rm -rf $COMPLETE_STAGING/$SKETCH_FOLDER/sketch.js
+#                     cp -r $STUDENT_SKETCH_IN_FOLDER $COMPLETE_STAGING/$SKETCH_FOLDER
+#                     echo "  [GS] Copy complete!"
+
+#                 else
+#                     echo "[GS] Could not find $SKETCH_FOLDER/sketch.js to copy in unpacked student submission ("$STUDENT_SUBMISSION_DIR"). Exiting...";
+
+#                 fi
+#             fi
+#         done
+#     fi
+# }
+
+# copy_student_directory "$DIR"/staging
+if [ "$CONFIG_TEST_SINGLE_SKETCH" = true ] ; then
+    echo "[GS] Running in single sketch mode"
+    COPY_TO="$DIR"/staging"$SINGLE_SKETCH"
+    PATH_TO_FILES="sketch.js"
+    find_and_copy_sketch $PATH_TO_FILES $COPY_TO
+else
+    echo "[GS] Running in multi sketch mode"
+    COMPLETE_STAGING="$DIR"/staging"$MULTI_SKETCH"
+    echo "[GS] Looking for sketch folders in "$COMPLETE_STAGING""
+    for FILE in $COMPLETE_STAGING/*; do
+        echo "[GS] checking "$FILE""
+        if [ -d $FILE ]
+        then
+            SKETCH_FOLDER="$(basename -- $FILE)"
+            COPY_TO="$COMPLETE_STAGING"/"$SKETCH_FOLDER"
+            PATH_TO_FILES=""$SKETCH_FOLDER"/sketch.js"
+            find_and_copy_sketch $PATH_TO_FILES $COPY_TO
+        fi
+    done
+fi
+
 
 cd "$DIR"/staging
 
@@ -70,7 +128,6 @@ rm -rf "$DIR"/staging/node_modules
 
 npm install
 
-# npx playwright install
 npx playwright install --with-deps chromium
 npx playwright test
 

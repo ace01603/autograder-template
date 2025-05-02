@@ -4,9 +4,17 @@ import { test, expect } from '@playwright/test';
 // sketchName is the name of the sketch displayed in the test results that students
 // URLs are relative to the staging folder, not the autograderTests folder.
 const SKETCH_ENTRY_POINTS = [
+    // {
+    //     sketchName: 'p5.js sketch',
+    //     url: '/singleSketch/index.html'
+    // },
     {
-        sketchName: 'p5.js sketch',
-        url: '/singleSketch/index.html'
+        sketchName: 'sketch 1',
+        url: '/multiSketch/sketch1/index.html'
+    },
+    {
+        sketchName: 'sketch 2',
+        url: '/multiSketch/sketch2/index.html'
     }
 ]
 

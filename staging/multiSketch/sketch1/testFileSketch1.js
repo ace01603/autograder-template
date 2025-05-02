@@ -1,4 +1,4 @@
-import { TestResults, canvasStatus, substituteDraw, checkCanvasSize, checkBackground } from "../testingDependencies/test-utils.js";
+import { TestResults, canvasStatus, substituteDraw, checkCanvasSize, checkBackground } from "../../testingDependencies/test-utils.js";
 
 /*** EXERCISE-SPECIFIC TEST FUNCTIONS. These functions are called from runTests() below. */
 
@@ -47,7 +47,8 @@ async function runTests(canvas) {
 
     // Some common tests are already defined in ../testingDependencies/test-utils.js e.g.:
     checkCanvasSize(400, 400);
-    // Some of these tests, like checkCanvasSize, already store the result in TestResults so you do not have to specify feedback.
+    checkBackground(color(0), "black")
+    // Some of these tests, like checkCanvasSize already store the result in TestResults so you do not have to specify feedback.
     // To write tests, you should have a good understanding of automated software testing.
     // If you don't, here is an overview https://www.geeksforgeeks.org/automation-testing-software-testing/
 

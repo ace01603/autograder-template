@@ -1,4 +1,4 @@
-import { TestResults, canvasStatus, substituteDraw, checkCanvasSize, checkBackground } from "../testingDependencies/test-utils.js";
+import { TestResults, canvasStatus, substituteDraw, checkCanvasSize, checkShapes, getShapes, TestSquare } from "../../testingDependencies/test-utils.js";
 
 /*** EXERCISE-SPECIFIC TEST FUNCTIONS. These functions are called from runTests() below. */
 
@@ -47,10 +47,13 @@ async function runTests(canvas) {
 
     // Some common tests are already defined in ../testingDependencies/test-utils.js e.g.:
     checkCanvasSize(400, 400);
-    // Some of these tests, like checkCanvasSize, already store the result in TestResults so you do not have to specify feedback.
+    // Some of these tests, like checkCanvasSize already store the result in TestResults so you do not have to specify feedback.
     // To write tests, you should have a good understanding of automated software testing.
     // If you don't, here is an overview https://www.geeksforgeeks.org/automation-testing-software-testing/
 
+    const shapes = getShapes();
+    const square = new TestSquare(200, 200, 50);
+    checkShapes([square], shapes, false, false);
 
     // DO NOT EDIT This statement must be last - makes test results available to Playwright
     completeTests();
