@@ -6,9 +6,8 @@ Description of repo contents:
 - sampleSolutions folder: (Optional) Put your sample solutions (just the sketch.js files and assets folders, if required) here for use when testing your tests.
 - staging folder: This is where the testing happens. Read the "Writing Tests" section below before editing / moving any files.
 - tools folder: Contains a Python script for converting Playwright test output files to the Gradescope format.
-- grading.config: Settings for the autograder. Contains only one setting (whether this is a single-sketch autograder or a multi-sketch autograder). See the "Writing Tests" section below.
 - run_autograder: The test runner script required by Gradescope. This script should not be edited unless you are making major changes to the structure.
-- setup.sh: Required by Gradescope, this script installs all software required to run the tests (e.g. bash, Node).
+- setup.sh: Required by Gradescope, this script installs all software required to run the tests (e.g. bash, Node). This script should not be edited.
 
 # Writing tests
 ## Setup
@@ -24,35 +23,51 @@ Next, install all dependencies:
 You should see a folder called node_modules appear in the staging folder.
 
 ## Add tests to staging
-Add test files for each sketch you are autograding into the staging folder. If you are autograding submissions of a single sketch, use the singleSketch folder. If you are autograding submissions that will contain multiple separate tests, use the multiSketch folder. Each sketch to be autograded will need an index.html file in the staging folder. This file should link all necessary JS files: 
+Add test files for each sketch you are autograding into the sketches folder inside the staging folder. Each sketch to be autograded should be in its own folder in the sketches folder. For example, if submissions will contain two sketches, your staging folder might look something like:
 
-- p5js and the sound library (optional)
-- preload.js (in testingDependencies)
-- sketch.js (the sketch code, must be called sketch.js): this is the file to be autograded
-- test-utils.js (in testingDependencies)
-- a test file.
+```
+staging
+  |__sketches
+       |__ sketch1
+       |__ sketch2
+```
+ Each sketch to be autograded will need an index.html file in the staging folder. This file should link all necessary JS files. **Important:** The p5js folder and testingDependency folder will be copied into each sketch folder when the autograder runs so the file paths used to link each file should reflect this, as shown below. 
 
-See the existing template index.html files. You should be able to use the contents of an existing file and just update the name of the test file as needed. You may also need to modify the path to each script depending on the folder structure.
+- The main p5js library: ```<script src="./p5js/p5.min.js"></script>``` . This tag should be placed in the ```<head></head>``` of index.html.
+- The p5js sound library, if required: ```<script src="./p5js/p5.sound.min.js"></script>``` . This tag should be placed in the ```<head></head>``` of index.html.
+- preload.js (in testingDependencies): ```<script src="./testingDependencies/preload.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html.
+- sketch.js (the sketch code, must be called sketch.js). This is the file to be autograded and it will be automatically copied in when the autograder runs. Use ```<script src="sketch.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html, immediately after preload.js.
+- test-utils.js (in testingDependencies): ```<script src="./testingDependencies/test-utils.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html, immediately after script.js.
+- a .js test file. This should be linked at the end of the ```<body></body>``` of index.html, immediately after test-utils.js.
 
-Write your tests in the in the test file for each sketch, following the format shown in the templates (e.g. multiSketch/sketch1/testFileSketch1.js). Tests can take any form but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. 
+**See the existing template index.html files. You should be able to use the contents of an existing file and just update the name of the test file as needed.**
+
+Write your tests in the test file for each sketch, following the format shown in the templates (e.g. sketches/sketch1/testFileSketch1.js). Tests can take any form but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. 
 
 You will find lots of utility functions and some pre-defined tests for common functionality (e.g. checking the canvas is a specified size) in staging/testingDependencies/test-utils.js. These functions are toward the bottom of test-utils in two regions: "GENERAL PURPOSE FUNCTIONS" and "GENERIC TESTS THAT MIGHT BE USEFUL".
-
-## Configure the autograder
-Open grading.config and update the ```CONFIG_TEST_SINGLE_SKETCH``` variable. It should be ```true``` if students will upload a single sketch.js, or ```false``` if they will upload multiple sketches at the same time.
-
-Edit the ```SKETCH_ENTRY_POINTS``` array in staging/autograderTests/runner.spec.js. You should have one entry for each sketch. Each entry should provide a name for the sketch (your choice, e.g. Exercise 1), and the URL of the index.html file that is used to run the sketch.
 
 ## Test and run your tests
 Before uploading the autograder to Gradescope, you should test your tests by running them on a selection of sample solutions e.g. a fully correct solution and solutions with each potential problem you are testing for. 
 
-Tests are run from the command line. Make sure your Terminal is running in the staging folder, then run:
+To test your tests, copy the following dependencies from staging into each sketch folder (assumes you have followed the setup steps above):
+- autograderTests
+- node_modules
+- p5js
+- testingDependcies
+- package-lock.json
+- package.json
+- playwright.config.js
+- A sample solution sketch.js file and an assets folder if needed
+
+Note: all of the above folders and files should be removed from the sketch folders once you are done testing your tests.
+
+Tests are run from the command line. Make sure your Terminal is running in the sketch folder that you want to test, then run:
 
 ```npx playwright test```
 
 The first time Playwright is run, you will likely need to install more components. Follow the prompts in the Terminal.
 
-Test output will be shown in the terminal. You can also see the full output in staging/ctrf/ctrf-report.json. The tests you defined in testFile.js are run as "steps" of a larger test (Test p5.js sketch > Run output tests). If even one of your tests fails, the larger test will also fail. Students will only see the step results.
+Test output will be shown in the terminal. You can also see the full output in ctrf/ctrf-report.json inside the sketch folder. The tests you defined in testFile.js are run as "steps" of a larger test (Test p5.js sketch > Run output tests). If even one of your tests fails, the larger test will also fail. Students will only see the step results.
 
 # Create the autograder
 - Zip the contents of this repo (just the contents, not the repo folder) and name it autograder.zip.
