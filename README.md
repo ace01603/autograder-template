@@ -2,14 +2,12 @@
 
 This autograder template was created using [this Jest autograder](https://github.com/ucsb-gradescope-tools/jest-autograder) as a reference.
 
-**Important:** Do not edit / move / rename any files EXCEPT for testFile.js and sketch.js in the staging folder.
-
 Description of repo contents: 
-- sampleSolutions folder: (Optional) Put your sample solutions (just the sketch.js file) here for use when testing your tests.
-- staging folder: This is where the testing happens. Do not edit any files (or change any file names) EXCEPT for testFile.js and sketch.js. See the "Writing Tests" section below.
+- sampleSolutions folder: (Optional) Put your sample solutions (just the sketch.js files and assets folders, if required) here for use when testing your tests.
+- staging folder: This is where the testing happens. Read the "Writing Tests" section below before editing / moving any files.
 - tools folder: Contains a Python script for converting Playwright test output files to the Gradescope format.
-- grading.config: Settings for the autograder. Ignore for now.
-- run_autograder: The test runner script required by Gradescope. This script currently only handles submissions of a single sketch. This will likely be modified to handled submission of multiple sketches at the same time (e.g. for an entire practical at once).
+- grading.config: Settings for the autograder. Contains only one setting (whether this is a single-sketch autograder or a multi-sketch autograder). See the "Writing Tests" section below.
+- run_autograder: The test runner script required by Gradescope. This script should not be edited unless you are making major changes to the structure.
 - setup.sh: Required by Gradescope, this script installs all software required to run the tests (e.g. bash, Node).
 
 # Writing tests
@@ -25,13 +23,28 @@ Next, install all dependencies:
 
 You should see a folder called node_modules appear in the staging folder.
 
-## Add tests to staging/autograderTests/testFile.js
-Write your tests in the runTests function already in testFile.js. Tests can take any format but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. 
+## Add tests to staging
+Add test files for each sketch you are autograding into the staging folder. If you are autograding submissions of a single sketch, use the singleSketch folder. If you are autograding submissions that will contain multiple separate tests, use the multiSketch folder. Each sketch to be autograded will need an index.html file in the staging folder. This file should link all necessary JS files: 
+
+- p5js and the sound library (optional)
+- preload.js (in testingDependencies)
+- sketch.js (the sketch code, must be called sketch.js): this is the file to be autograded
+- test-utils.js (in testingDependencies)
+- a test file.
+
+See the existing template index.html files. You should be able to use the contents of an existing file and just update the name of the test file as needed. You may also need to modify the path to each script depending on the folder structure.
+
+Write your tests in the in the test file for each sketch, following the format shown in the templates (e.g. multiSketch/sketch1/testFileSketch1.js). Tests can take any form but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. 
 
 You will find lots of utility functions and some pre-defined tests for common functionality (e.g. checking the canvas is a specified size) in staging/testingDependencies/test-utils.js. These functions are toward the bottom of test-utils in two regions: "GENERAL PURPOSE FUNCTIONS" and "GENERIC TESTS THAT MIGHT BE USEFUL".
 
+## Configure the autograder
+Open grading.config and update the ```CONFIG_TEST_SINGLE_SKETCH``` variable. It should be ```true``` if students will upload a single sketch.js, or ```false``` if they will upload multiple sketches at the same time.
+
+Edit the ```SKETCH_ENTRY_POINTS``` array in staging/autograderTests/runner.spec.js. You should have one entry for each sketch. Each entry should provide a name for the sketch (your choice, e.g. Exercise 1), and the URL of the index.html file that is used to run the sketch.
+
 ## Test and run your tests
-Before uploading the autograder to Gradescope, you should test your tests by running them on a selection of sample solutions e.g. a fully correct solution and solutions with each potential problem you are testing for. A sample solution is just a sketch file (sketch.js) that you put in the staging folder. It should be at the same level as index.html. You can run index.html using Live Preview to check the sketch visually.
+Before uploading the autograder to Gradescope, you should test your tests by running them on a selection of sample solutions e.g. a fully correct solution and solutions with each potential problem you are testing for. 
 
 Tests are run from the command line. Make sure your Terminal is running in the staging folder, then run:
 

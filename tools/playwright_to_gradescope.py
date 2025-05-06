@@ -25,23 +25,48 @@ def flatten_playwright_results(test_results):
     return gradescope_results
 
 
-def main():
+def find_all_playwright_output():
+    # Get the folder names in sketches
+    sketches_dir = "sketches"
+    output_dir = "ctrf"
+    dir_list = os.listdir(sketches_dir)
+    if output_dir in dir_list:
+        # no sketch folders, output at top level
+        print("Sketch at top level")
+        return [""]
+    else:
+        sketches = []
+        for file in dir_list:
+            if os.path.isdir(sketches_dir + "/" + file):
+                if output_dir in os.listdir(sketches_dir + "/" + file):
+                    print(file + "is a sketch with output")
+                    sketches.append(file)
+        return sketches
+    
 
+
+def main():
     # Initialize command line arguments
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-i", "--input", help="Input file to read (produced by Playwright)")
     parser.add_argument("-o", "--output", help="Output file to produce (in Gradescope format)")
     args = parser.parse_args()
 
+    # Search for all ctrf files
+    sketches = find_all_playwright_output()
+    gradescope_tests = []
 
-    playwright_data = {}
+    for sketch in sketches:
+        playwright_output = "sketches/" + (sketch + "/" if sketch != "" else "") + "ctrf/ctrf-report.json"
+        result_prefix = "" if sketch == "" else sketch + ": "
+        with open(playwright_output, 'r') as json_data:
+            raw_json = json.load(json_data)
+            converted = flatten_playwright_results(raw_json["results"]["tests"])
+            for result in converted:
+                result["name"] = result_prefix + result["name"]
+            gradescope_tests += converted
 
-    if args.input != None:
-        with open(args.input,'r') as json_data:
-            playwright_data = json.load(json_data)
-    
-    gradescope_tests = flatten_playwright_results(playwright_data["results"]["tests"])
+
 
     print("gradescope_tests",json.dumps(gradescope_tests, indent=2))
 
