@@ -1,16 +1,11 @@
 // Sample solution (delete from autograder)
 
 function setup() {
-    createCanvas(300, 300);
+    createCanvas(400, 400);
 }
 
 function draw() {
-    background(255);
+    background(0);
     fill(255);
     circle(width / 2, height / 2, 50);
-}
-
-function testMe() {
-    return 1;
-    let a = 1;
 }

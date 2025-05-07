@@ -9,6 +9,7 @@ DIR="/autograder/source"
 OUTPUT_DIR="/autograder/results"
 STUDENT_SUBMISSION_DIR="/autograder/submission"
 PLAYWRIGHT_JSON_TOOL="$DIR/tools/playwright_to_gradescope.py"
+BAD_FORMAT_TOOL="$DIR/tools/record_submission_format_problem.py"
 SKETCHES_DIR="$DIR/staging/sketches"
 
 
@@ -35,6 +36,7 @@ find_and_copy_sketch() {
     PATH_TO_FILES=$1 # The path to the file to search e.g. */sketch_folder or *
     PATH_TO_ASSETS=$2
     COPY_TO=$3 # The path in the staging area that the submission file should be copied to
+    SKETCH_FOLDER=$4 # The name of the sketch folder
     # Search for the sketch first
     cd $STUDENT_SUBMISSION_DIR # get from staging back to submission 
     STUDENT_SKETCH=$(find -path "*/"$PATH_TO_FILES"")
@@ -58,8 +60,30 @@ find_and_copy_sketch() {
             cp -r "$STUDENT_ASSETS_PATH" "$COPY_TO"
             echo "  [GS] Assets copy complete"
         fi
+        # Move these inside find_and_copy_sketch to avoid unnecessary copying if the sketch doesn't exist and to allow submission format checks
+        # Copy autograderTests
+        copy_dependency_to_sketch "autograderTests" "$SKETCH_FOLDER"
+        # Copy node_modules
+        copy_dependency_to_sketch "node_modules" "$SKETCH_FOLDER"
+        # Copy p5js
+        copy_dependency_to_sketch "p5js" "$SKETCH_FOLDER"
+        # Copy testingDependencies
+        copy_dependency_to_sketch "testingDependencies" "$SKETCH_FOLDER"
+        # Copy package-lock.json
+        copy_dependency_to_sketch "package-lock.json" "$SKETCH_FOLDER"
+        # Copy package.json
+        copy_dependency_to_sketch "package.json" "$SKETCH_FOLDER"
+        # Copy playwright.config.js
+        copy_dependency_to_sketch "playwright.config.js" "$SKETCH_FOLDER"
+        # Copy eslint.config.js
+        copy_dependency_to_sketch "eslint.config.js" "$SKETCH_FOLDER"
+        cd "$SKETCHES_DIR"/"$SKETCH_FOLDER"
+        npx playwright test # Only test in this folder
+        npx eslint sketch.js --format json > eslint.json # only test sketch.js
+        cd "$DIR"/staging # Should be back to staging
     else
-        echo "[GS] Could not find sketch folder "$STUDENT_SKETCH""
+        echo "[GS] Could not find sketch folder "$SKETCH_FOLDER""
+        python3 "$BAD_FORMAT_TOOL" -s "$SKETCH_FOLDER"
         cd "$DIR"/staging
     fi
 }
@@ -91,27 +115,11 @@ for FILE in "$SKETCHES_DIR"/*; do
         COPY_TO="$SKETCHES_DIR"/"$SKETCH_FOLDER"
         PATH_TO_SKETCH=""$SKETCH_FOLDER"/sketch.js" 
         PATH_TO_ASSETS=""$SKETCH_FOLDER"/assets"
-        find_and_copy_sketch "$PATH_TO_SKETCH" "$PATH_TO_ASSETS" "$COPY_TO"
-
-        # Copy autograderTests
-        copy_dependency_to_sketch "autograderTests" "$SKETCH_FOLDER"
-        # Copy node_modules
-        copy_dependency_to_sketch "node_modules" "$SKETCH_FOLDER"
-        # Copy p5js
-        copy_dependency_to_sketch "p5js" "$SKETCH_FOLDER"
-        # Copy testingDependencies
-        copy_dependency_to_sketch "testingDependencies" "$SKETCH_FOLDER"
-        # Copy package-lock.json
-        copy_dependency_to_sketch "package-lock.json" "$SKETCH_FOLDER"
-        # Copy package.json
-        copy_dependency_to_sketch "package.json" "$SKETCH_FOLDER"
-        # Copy playwright.config.js
-        copy_dependency_to_sketch "playwright.config.js" "$SKETCH_FOLDER"
-        cd "$SKETCHES_DIR"/"$SKETCH_FOLDER"
-        npx playwright test # Only test in this folder
-        cd "$DIR"/staging # Should be back to staging
+        find_and_copy_sketch "$PATH_TO_SKETCH" "$PATH_TO_ASSETS" "$COPY_TO" "$SKETCH_FOLDER"
+        
     fi
 done
+
 
 python3 "$PLAYWRIGHT_JSON_TOOL" -o "$OUTPUT_DIR"/"results.json"
 
