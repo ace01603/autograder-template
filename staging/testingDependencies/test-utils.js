@@ -936,7 +936,7 @@ export class TestResults {
     static #createTestOutput(iconName, message) {
         const element = document.createElement("p");
         element.classList.add("test-result");
-        element.innerHTML = `<i class="fa-solid ${iconName}"></i> ${message}`;
+        // element.innerHTML = `<i class="fa-solid ${iconName}"></i> ${message}`;
         return element;
     }
 
@@ -965,9 +965,9 @@ export class TestResults {
 
     static display(div) {
         this.#clearResultOutput(div);
-        this.#createResultSection(div, this.passed, "Checks passed:", "fa-check");
-        this.#createResultSection(div, this.failed, "Checks failed:", "fa-xmark");
-        this.#createResultSection(div, this.warnings, "Warnings:", "fa-triangle-exclamation");
+        this.#createResultSection(div, this.passed, "Checks passed:", "&#x2713;"); // fa-check
+        this.#createResultSection(div, this.failed, "Checks failed:", "&#215;"); // fa-xmark
+        this.#createResultSection(div, this.warnings, "Warnings:", "&#x26A0;"); // fa-triangle-exclamation
     }
 
     static addPass(message) {
@@ -1014,15 +1014,15 @@ export function simulateKeyboardEvent(eventFunc, keyVal = "", code = 0) {
  */
 export function runMouseClick() {
     let mouseEventImplemented = false;
-    if (window.hasOwnProperty("mousePressed")) {
+    if (Object.prototype.hasOwnProperty.call(window, "mousePressed")) {
         mouseEventImplemented = true;
         mousePressed();
     }
-    if (window.hasOwnProperty("mouseReleased")) {
+    if (Object.prototype.hasOwnProperty.call(window, "mouseReleased")) {
         mouseEventImplemented = true;
         mouseReleased();
     }
-    if (window.hasOwnProperty("mouseClicked")) {
+    if (Object.prototype.hasOwnProperty.call(window, "mouseClicked")) {
         mouseEventImplemented = true;
         mouseClicked();
     }
@@ -1225,7 +1225,7 @@ export const LOAD_SOUND = /loadSound\(/g;
  * THIS SHOULD BE A TEMPORARY FIX. The long term fix should have separate tracking for preloaded functionality.
  */
 export function substituteDraw() {
-    if (!window.hasOwnProperty("draw")) {
+    if (!Object.prototype.hasOwnProperty.call(window, "draw")) {
         window["draw"] = () => {};
         advanceToFrame(1);
     }
@@ -1272,7 +1272,7 @@ function findClosingBracket(codeStr, openBracket, openIndex) {
             counts[openingSymbol[codeStr[i]]]--;
             if (counts[openBracket] === 0) return i;
         }
-        else if (counts.hasOwnProperty(codeStr[i])) {
+        else if (Object.prototype.hasOwnProperty.call(counts, codeStr[i])) {
             counts[codeStr[i]]++;
         }
     }
@@ -1302,8 +1302,8 @@ export function getArgString(functionCall) {
 }
 
 export function getLastBackgroundCallBeforeShapes() {
-    const setupContents = window.hasOwnProperty("setup") ? getFunctionContents(setup).join("\n") : "";
-    const drawContents = window.hasOwnProperty("draw") ? getFunctionContents(draw).join("\n") : "";
+    const setupContents = Object.prototype.hasOwnProperty.call(window, "setup") ? getFunctionContents(setup).join("\n") : "";
+    const drawContents = Object.prototype.hasOwnProperty.call(window, "draw") ? getFunctionContents(draw).join("\n") : "";
     const allContents = setupContents + drawContents;
     const shapes = [...allContents.matchAll(ANY_SHAPE)];
     const backgrounds = [...allContents.matchAll(BACKGROUND)];
