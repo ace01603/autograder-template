@@ -13,6 +13,7 @@ if __name__ == "__main__":
             {
                 "name": f"Unable to find your code for {args.sketch}. Your submission must contain a folder called {args.sketch} which must contain your code in a file called sketch.js.",
                 "status": "failed",
-                "score": 0.0
+                "score": 0.0,
+                "visibility": "visible"
             }
         ], json_data, indent=2, sort_keys=True)

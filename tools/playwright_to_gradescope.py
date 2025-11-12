@@ -12,15 +12,26 @@ from pathlib import Path
 def flatten_playwright_results(test_results):
     gradescope_results = []
     for test in test_results:
+        visibiliy = "hidden"
+        try:
+            annotations = test["extra"]["annotations"]
+            for a in annotations:
+                if a["type"] == "visibility":
+                    visibility = a["description"]
+                    break
+        except:
+            print("Unable to find visibility of test results")
         if len(test["steps"]) > 0:
             for step in test["steps"]:
                 step["score"] = 1.0 if step["status"] == "passed" else 0.0
+                step["visibility"] = visibility
                 gradescope_results.append(step)
         else:
             gradescope_results.append({
                 "name": test["name"],
                 "status": test["status"],
-                "score": 1.0 if test["status"] == "passed" else 0.0
+                "score": 1.0 if test["status"] == "passed" else 0.0,
+                "visibility": visibility
             })
     return gradescope_results
 
@@ -35,19 +46,22 @@ def find_all_test_output():
     playwright_sketches = []
     eslint_sketches = []
     bad_format_sketches = []
+    good_format_sketches = []
 
     dir_list = os.listdir(sketches_dir)
-
+    # MODIFY THIS TO ALWAYS SHOW OUTPUT FORMAT TEST (output should be visible to students)
     for file in dir_list:
         if os.path.isdir(sketches_dir + "/" + file):
             sketch_files = os.listdir(sketches_dir + "/" + file)
             if output_bad_format in sketch_files:
                 bad_format_sketches.append(file)
+            else:
+                good_format_sketches.append(file)
             if output_dir in sketch_files:
                 playwright_sketches.append(file)
             if output_file in sketch_files:
                 eslint_sketches.append(file)
-    return playwright_sketches, eslint_sketches, bad_format_sketches
+    return playwright_sketches, eslint_sketches, bad_format_sketches, good_format_sketches
     
 
 def process_playwright_output(sketches_with_playwright):
@@ -61,6 +75,7 @@ def process_playwright_output(sketches_with_playwright):
             converted = flatten_playwright_results(raw_json["results"]["tests"])
             for result in converted:
                 result["name"] = result_prefix + result["name"]
+                # result["visibility"] = visibility
             gradescope_tests += converted
     
     return gradescope_tests
@@ -99,6 +114,18 @@ def process_bad_format(sketches_with_bad_format):
     return bad_format_tests
 
 
+def process_good_format(sketches_with_good_format):
+    good_format_tests = []
+    for sketch in sketches_with_good_format:
+        good_format_tests.append({
+                            "name": f'Found sketch.js file for {sketch}.',
+                            "status": "passed",
+                            "score": 0.0,
+                            "visibility": "visible"
+        })
+    return good_format_tests
+
+
 def main():
     # Initialize command line arguments
     parser = argparse.ArgumentParser()
@@ -107,14 +134,15 @@ def main():
     args = parser.parse_args()
 
     # Search for all ctrf files
-    sketches_with_playwright, sketches_with_eslint, sketches_with_bad_format = find_all_test_output()
+    sketches_with_playwright, sketches_with_eslint, sketches_with_bad_format, sketches_with_good_format = find_all_test_output()
     
     gradescope_tests = process_bad_format(sketches_with_bad_format)
+    gradescope_tests += process_good_format(sketches_with_good_format)
     gradescope_tests += process_playwright_output(sketches_with_playwright)
     gradescope_tests += process_eslint_output(sketches_with_eslint)
 
 
-    print("gradescope_tests",json.dumps(gradescope_tests, indent=2))
+    print("gradescope_tests",json.dumps({ "tests": gradescope_tests}, indent=2))
 
     if args.output != None:
       with open(args.output,'w') as json_data:
@@ -123,3 +151,36 @@ def main():
 
 if __name__=="__main__":
     main()
+
+
+'''
+{
+  "tests": [
+    {
+      "name": "1.1-Shapes1: Your canvas is the expected size.",
+      "status": "passed",
+      "score": 1.0
+    },
+    {
+      "name": "1.1-Shapes1: 3 shapes were drawn, as expected.",
+      "status": "passed",
+      "score": 1.0
+    },
+    {
+      "name": "1.1-Shapes1: Sketch includes a 75 x 30 ellipse at 50, 100.",
+      "status": "passed",
+      "score": 1.0
+    },
+    {
+      "name": "1.1-Shapes1: Could not find a 100 pixel square at 300, 80.",
+      "status": "failed",
+      "score": 0.0
+    },
+    {
+      "name": "1.1-Shapes1: Sketch includes a triangle with corners at 200, 250; 400, 450; 125, 500.",
+      "status": "passed",
+      "score": 1.0
+    }
+  ]
+}
+'''

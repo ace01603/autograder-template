@@ -34,8 +34,14 @@ import { test, expect } from '@playwright/test';
             await page.goto("/");
             await expect(page.locator('#test-status')).toHaveText("complete");
             const testResults = await page.evaluate(() => window.results);
+            // get test-visibility
             await expect(testResults).toBeTruthy();
             if (testResults) {
+                const visibility = await page.locator("#test-visibility").innerText();
+                test.info().annotations.push({
+                    type: 'visibility',
+                    description: visibility,
+                });
                 for (const res of testResults) {
                     test.step(`${res.message}`, () => {
                         expect(res.status).toBe("passed");

@@ -1,0 +1,98 @@
+{
+  "results": [
+    {
+      "sketch": "sketch2",
+      "version": "correct",
+      "test-results": [
+        {
+          "name": "Your canvas is the expected size.",
+          "status": "passed"
+        },
+        {
+          "name": "All expected shapes are drawn on the canvas.",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "sketch": "sketch2",
+      "version": "lintingError",
+      "test-results": [
+        {
+          "name": "Your canvas is the expected size.",
+          "status": "passed"
+        },
+        {
+          "name": "All expected shapes are drawn on the canvas.",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "sketch": "sketch2",
+      "version": "incorrect",
+      "test-results": [
+        {
+          "name": "Your canvas is the expected size.",
+          "status": "passed"
+        },
+        {
+          "name": "Expected 1 shape(s). Your sketch contains 0 shapes.",
+          "status": "failed"
+        }
+      ]
+    },
+    {
+      "sketch": "sketch3",
+      "version": "correct",
+      "test-results": []
+    },
+    {
+      "sketch": "sketch3",
+      "version": "lintingError",
+      "test-results": []
+    },
+    {
+      "sketch": "sketch1",
+      "version": "correct",
+      "test-results": [
+        {
+          "name": "Your canvas is the expected size.",
+          "status": "passed"
+        },
+        {
+          "name": "Your sketch has the expected background colour.",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "sketch": "sketch1",
+      "version": "lintingError",
+      "test-results": [
+        {
+          "name": "Your canvas is the expected size.",
+          "status": "passed"
+        },
+        {
+          "name": "Your sketch has the expected background colour.",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "sketch": "sketch1",
+      "version": "incorrect",
+      "test-results": [
+        {
+          "name": "The canvas should be 400 by 400. Your canvas is 300 by 300. Check that you have called createCanvas() inside the setup function, and that you have passed it two numbers\u2014one number for the width, and one number for the height.",
+          "status": "failed"
+        },
+        {
+          "name": "The background colour of the canvas should be black. Check the value(s) passed to background().",
+          "status": "failed"
+        }
+      ]
+    }
+  ]
+}

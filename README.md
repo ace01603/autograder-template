@@ -38,36 +38,31 @@ staging
 - preload.js (in testingDependencies): ```<script src="./testingDependencies/preload.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html.
 - sketch.js (the sketch code, must be called sketch.js). This is the file to be autograded and it will be automatically copied in when the autograder runs. Use ```<script src="sketch.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html, immediately after preload.js.
 - test-utils.js (in testingDependencies): ```<script src="./testingDependencies/test-utils.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html, immediately after script.js.
-- a .js test file. This should be linked at the end of the ```<body></body>``` of index.html, immediately after test-utils.js.
+- a .js test file. This should be linked at the end of the ```<body></body>``` of index.html, immediately after test-utils.js. 
+
+The only files needed in each sketch folder in staging are index.html and the test file containing sketch-specific tests.
 
 **See the existing template index.html files. You should be able to use the contents of an existing file and just update the name of the test file as needed.**
 
-Write your tests in the test file for each sketch, following the format shown in the templates (e.g. sketches/sketch1/testFileSketch1.js). Tests can take any form but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. 
+Write your tests in the test file for each sketch, following the format shown in the templates (e.g. sketches/sketch1/testFileSketch1.js). Tests can take any form but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. **Important:** Set the visibility of the tests in the test file. completeTests() is called on the last line of the runTests() function. Pass ```true``` to make the tests visible to students.
 
 You will find lots of utility functions and some pre-defined tests for common functionality (e.g. checking the canvas is a specified size) in staging/testingDependencies/test-utils.js. These functions are toward the bottom of test-utils in two regions: "GENERAL PURPOSE FUNCTIONS" and "GENERIC TESTS THAT MIGHT BE USEFUL".
 
-## Test and run your tests
-Before uploading the autograder to Gradescope, you should test your tests by running them on a selection of sample solutions e.g. a fully correct solution and solutions with each potential problem you are testing for. 
+## Run your tests locally
+Before uploading the autograder to Gradescope, you should test your tests by running them on a selection of sample solutions e.g. a fully correct solution and solutions with each potential problem you are testing for.
 
-To test your tests, copy the following dependencies from staging into each sketch folder (assumes you have followed the setup steps above):
-- autograderTests
-- node_modules
-- p5js
-- testingDependcies
-- package-lock.json
-- package.json
-- playwright.config.js
-- A sample solution sketch.js file and an assets folder if needed
+You can test locally by running the tools/run_tests_locally.py script. This script looks for sample submissions in the sampleSolutions folder. They should be organised by sketch (same names as the sketch 
+folders in staging/sketches). Within the sample solution sketch folder, create new folders that describe 
+the sample submission in some way e.g. 'correct', 'incorrect'. Inside each sample submission folder, add 
+only the files that should be marked e.g. sketch.js and an assets folder if needed.
 
-Note: all of the above folders and files should be removed from the sketch folders once you are done testing your tests.
+By default, run_tests_locally.py tests all sample submissions, which can be slow. To test only solutions for specific questions, indicated the sketch folder names in the ```selected_sketches``` list in ```__main__```.
 
-Tests are run from the command line. Make sure your Terminal is running in the sketch folder that you want to test, then run:
+Local test results are written to sampleSolutions/localTestResults.json.
 
-```npx playwright test```
+### Troubleshooting
+If you have another VS Code window open and have been running code with Live Preview, the local test will fail with no output, even if Live Preview is no longer active. Quit and restart VS Code.
 
-The first time Playwright is run, you will likely need to install more components. Follow the prompts in the Terminal.
-
-Test output will be shown in the terminal. You can also see the full output in ctrf/ctrf-report.json inside the sketch folder. The tests you defined in testFile.js are run as "steps" of a larger test (Test p5.js sketch > Run output tests). If even one of your tests fails, the larger test will also fail. Students will only see the step results.
 
 # Create the autograder
 - Zip the contents of this repo (just the contents, not the repo folder) and name it autograder.zip.

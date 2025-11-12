@@ -27,7 +27,19 @@ echo '[GS] Extracting zips in student submission...'
 find . -name "*.zip" | while read filename; do unzip -o -d "`dirname "$filename"`" "$filename"; done;
 
 # Clean out __MACOSX directories and hidden files
-find . -name "__MACOSX" -exec rm -rf {} \;
+echo '[GS] Removing __MACOSX and hidden files'
+find . -name "__MACOSX" -exec rm -rf {} \+
+
+# Clean out HTML, lib and config.json
+echo '[GS] Removing HTML files'
+find . -type f -name "*.html" -delete
+find . -type f -name "*.html"
+
+echo '[GS] Removing jsconfig.json'
+find . -type f -name "jsconfig.json" -delete
+
+echo '[GS] Removing lib folder'
+find . -type d -name "lib" -exec rm -rf {} \+
 
 # Remove old results.json files
 rm -r "$OUTPUT_DIR"/*.json

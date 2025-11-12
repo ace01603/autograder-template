@@ -25,11 +25,13 @@ function waitForP5() {
 
 /**
  * For use with Playwright. 
- * Makes the relevant contents of the TestResults instance available to Playwright.
+ * Makes the relevant contents of the TestResults instance available to Playwright and sets the visibility of the tests for Gradescope.
+ * @param {boolean} [visibility=false] Whether or not the test outputs should be visible to students in Gradescope
  */
-function completeTests() {
-    window.results = TestResults.playwright;
+function completeTests(visibility = false) {
+    window.results = TestResults.playwright; 
     document.getElementById("test-status").innerText = "complete";
+    document.getElementById("test-visibility").innerText = visibility ? "visible" : "hidden";
 }
 
 /**
@@ -53,8 +55,9 @@ async function runTests(canvas) {
     // If you don't, here is an overview https://www.geeksforgeeks.org/automation-testing-software-testing/
 
 
-    // DO NOT EDIT This statement must be last - makes test results available to Playwright
-    completeTests();
+    // DO NOT DELETE This statement must be last - makes test results available to Playwright
+    // pass true to completeTests() to make test output visible to students in Gradescope
+    completeTests(true);
 }
 
 // Calls waitForP5() every half second until p5.js finishes loading
