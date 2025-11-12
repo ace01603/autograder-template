@@ -12,7 +12,7 @@ from pathlib import Path
 def flatten_playwright_results(test_results):
     gradescope_results = []
     for test in test_results:
-        visibiliy = "hidden"
+        visibility = "hidden"
         try:
             annotations = test["extra"]["annotations"]
             for a in annotations:
