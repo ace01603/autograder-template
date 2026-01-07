@@ -1,6 +1,7 @@
 /**
  * Modified 29/9/2025 to update shape descriptions and equality checks when draw mode is changed.
  * Modified 30/9/2025 to merge playwright TestResults structure from autograder
+ * Modified 17/11/2025 to add LOAD_STRINGS constant
  */
 
 /** CONSTANTS */
@@ -1324,6 +1325,7 @@ export const RANDOM_RE = /random\(/g;
 export const LOAD_FONT = /loadFont\(/g;
 export const LOAD_IMAGE = /loadImage\(/g;
 export const LOAD_SOUND = /loadSound\(/g;
+export const LOAD_STRINGS = /loadStrings\(/g;
 
 
 /**
