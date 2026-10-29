@@ -79,8 +79,6 @@ find_and_copy_sketch() {
         copy_dependency_to_sketch "node_modules" "$SKETCH_FOLDER"
         # Copy p5js
         copy_dependency_to_sketch "p5js" "$SKETCH_FOLDER"
-        # Copy testingDependencies
-        copy_dependency_to_sketch "testingDependencies" "$SKETCH_FOLDER"
         # Copy package-lock.json
         copy_dependency_to_sketch "package-lock.json" "$SKETCH_FOLDER"
         # Copy package.json

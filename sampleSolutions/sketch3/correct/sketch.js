@@ -4,11 +4,8 @@ let cat;
 let catW = 512;
 let catH = 410;
 
-function preload() {
-    cat = loadImage("assets/pallas_cat.jpg");
-}
-
-function setup() {
+async function setup() {
+    cat = await loadImage("assets/pallas_cat.jpg");
     createCanvas(catW, catH);
     imageMode(CENTER);
 }

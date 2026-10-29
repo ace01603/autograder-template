@@ -31,13 +31,11 @@ staging
        |__ sketch1
        |__ sketch2
 ```
- Each sketch to be autograded will need an index.html file in the staging folder. This file should link all necessary JS files. **Important:** The p5js folder and testingDependency folder will be copied into each sketch folder when the autograder runs so the file paths used to link each file should reflect this, as shown below. 
+ Each sketch to be autograded will need an index.html file in the staging folder. This file should link all necessary JS files. **Important:** The p5js folder will be copied into each sketch folder when the autograder runs so the file paths used to link each file should reflect this, as shown below. 
 
-- The main p5js library: ```<script src="./p5js/p5.min.js"></script>``` . This tag should be placed in the ```<head></head>``` of index.html.
+- The main p5js library: ```<script src="./p5js/p5.js"></script>``` . This tag should be placed in the ```<head></head>``` of index.html.
 - The p5js sound library, if required: ```<script src="./p5js/p5.sound.min.js"></script>``` . This tag should be placed in the ```<head></head>``` of index.html.
-- preload.js (in testingDependencies): ```<script src="./testingDependencies/preload.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html.
 - sketch.js (the sketch code, must be called sketch.js). This is the file to be autograded and it will be automatically copied in when the autograder runs. Use ```<script src="sketch.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html, immediately after preload.js.
-- test-utils.js (in testingDependencies): ```<script src="./testingDependencies/test-utils.js"></script>```. This tag should be placed at the end of the ```<body></body>``` of index.html, immediately after script.js.
 - a .js test file. This should be linked at the end of the ```<body></body>``` of index.html, immediately after test-utils.js. 
 
 The only files needed in each sketch folder in staging are index.html and the test file containing sketch-specific tests.

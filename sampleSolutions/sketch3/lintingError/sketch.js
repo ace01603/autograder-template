@@ -4,12 +4,9 @@ var cat; // Should trigger no-var
 let cat_w = 512; // Should trigger camelcase
 let catH = 410;
 
-function preload() {
-    cat = loadImage("assets/pallas_cat.jpg");
-}
-
-function setup() {
-    createCanvas(cat_w, catH);
+async function setup() {
+    cat = await loadImage("assets/pallas_cat.jpg");
+    createCanvas(catW, catH);
     imageMode(CENTER);
 }
 

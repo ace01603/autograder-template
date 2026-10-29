@@ -1,95 +1,61 @@
 {
   "results": [
     {
-      "sketch": "sketch2",
+      "sketch": "sketch3",
       "version": "correct",
       "test-results": [
         {
-          "name": "Your canvas is the expected size.",
+          "name": "loadImage() is called in setup().",
           "status": "passed"
         },
         {
-          "name": "All expected shapes are drawn on the canvas.",
-          "status": "passed"
-        }
-      ]
-    },
-    {
-      "sketch": "sketch2",
-      "version": "lintingError",
-      "test-results": [
+          "name": "The canvas should be 512 by 410. Your canvas is 0 by 0. Check that you have called createCanvas() inside the setup function, and that you have passed it two numbers\u2014one number for the width, and one number for the height.",
+          "status": "failed"
+        },
         {
-          "name": "Your canvas is the expected size.",
+          "name": "Frame count is 0",
           "status": "passed"
         },
         {
-          "name": "All expected shapes are drawn on the canvas.",
-          "status": "passed"
-        }
-      ]
-    },
-    {
-      "sketch": "sketch2",
-      "version": "incorrect",
-      "test-results": [
-        {
-          "name": "Your canvas is the expected size.",
-          "status": "passed"
+          "name": "At frame 0, no images were found on the canvas.",
+          "status": "failed"
         },
         {
-          "name": "Expected 1 shape(s). Your sketch contains 0 shapes.",
+          "name": "At frame 0, no images were found on the canvas.",
+          "status": "failed"
+        },
+        {
+          "name": "At frame 0, no images were found on the canvas.",
           "status": "failed"
         }
       ]
     },
     {
       "sketch": "sketch3",
-      "version": "correct",
-      "test-results": []
-    },
-    {
-      "sketch": "sketch3",
-      "version": "lintingError",
-      "test-results": []
-    },
-    {
-      "sketch": "sketch1",
-      "version": "correct",
-      "test-results": [
-        {
-          "name": "Your canvas is the expected size.",
-          "status": "passed"
-        },
-        {
-          "name": "Your sketch has the expected background colour.",
-          "status": "passed"
-        }
-      ]
-    },
-    {
-      "sketch": "sketch1",
       "version": "lintingError",
       "test-results": [
         {
-          "name": "Your canvas is the expected size.",
+          "name": "loadImage() is called in setup().",
           "status": "passed"
         },
         {
-          "name": "Your sketch has the expected background colour.",
-          "status": "passed"
-        }
-      ]
-    },
-    {
-      "sketch": "sketch1",
-      "version": "incorrect",
-      "test-results": [
-        {
-          "name": "The canvas should be 400 by 400. Your canvas is 300 by 300. Check that you have called createCanvas() inside the setup function, and that you have passed it two numbers\u2014one number for the width, and one number for the height.",
+          "name": "The canvas should be 512 by 410. Your canvas is 0 by 0. Check that you have called createCanvas() inside the setup function, and that you have passed it two numbers\u2014one number for the width, and one number for the height.",
           "status": "failed"
         },
         {
-          "name": "The background colour of the canvas should be black. Check the value(s) passed to background().",
+          "name": "Frame count is 0",
+          "status": "passed"
+        },
+        {
+          "name": "At frame 0, no images were found on the canvas.",
+          "status": "failed"
+        },
+        {
+          "name": "At frame 0, no images were found on the canvas.",
+          "status": "failed"
+        },
+        {
+          "name": "At frame 0, no images were found on the canvas.",
           "status": "failed"
         }
       ]

@@ -1,4 +1,4 @@
-import { substituteDraw, TestResults, advanceToFrame, getShapes, canvasStatus, testSettingIsCalled, LOAD_IMAGE, checkCanvasSize, TestImage } from "../../testingDependencies/test-utils.js";
+import { substituteDraw, TestResults, advanceToFrame, getShapes, canvasStatus, testSettingIsCalled, LOAD_IMAGE, checkCanvasSize, TestImage } from "https://cdn.jsdelivr.net/gh/Supportive-IDE/p5js-testing-demo@latest/p5jsTestingLibrary.js";
 
 /*** EXERCISE-SPECIFIC TEST FUNCTIONS. These functions are called from runTests() below. */
 function checkImageProperties(expectedImg, actualShapes) {
@@ -27,7 +27,7 @@ function waitForP5() {
     if (canvases.length > 0) { // p5.js has loaded i.e. drawn a canvas
         clearInterval(loadTimer); // Stop the timer
         canvases[0].style.pointerEvents = "none"; // prevents p5.js from responding to mouse events independent of the tests
-        substituteDraw(); 
+        // substituteDraw(); 
         for (const e of canvasStatus.errors) {
             TestResults.addFail(`In frame ${frameCount}, ${e}`);
         }
@@ -46,6 +46,7 @@ function completeTests(visibility = false) {
     document.getElementById("test-visibility").innerText = visibility ? "visible" : "hidden";
 }
 
+
 /**
  * Run all tests.
  * @param {HTMLElement} canvas The HTML canvas created by p5.js
@@ -58,37 +59,35 @@ async function runTests(canvas) {
     // TestResults.addPass("This test passed.");
     // TestResults.addFail("This test failed.");
     // TestResults.addWarning("This is a warning.");
-
     // Some common tests are already defined in ../testingDependencies/test-utils.js e.g.:
-    checkCanvasSize(512, 410);
+    
     // Some of these tests, like checkCanvasSize already store the result in TestResults so you do not have to specify feedback.
     // To write tests, you should have a good understanding of automated software testing.
     // If you don't, here is an overview https://www.geeksforgeeks.org/automation-testing-software-testing/
-
-    const loadInPreload = testSettingIsCalled(LOAD_IMAGE, false, false, true);
-    const loadInSetup = testSettingIsCalled(LOAD_IMAGE, true, false, false);
-    const loadInDraw = testSettingIsCalled(LOAD_IMAGE, false, true, false);
-    if (loadInPreload) {
-        TestResults.addPass("<code>loadImage()</code> is called in <code>preload()</code>.");
-    }
+    
+    const loadInSetup = testSettingIsCalled(LOAD_IMAGE.re, true, false);
+    const loadInDraw = testSettingIsCalled(LOAD_IMAGE.re, false, true);
     if (loadInSetup) {
-        TestResults.addWarning("<code>loadImage()</code> is called in <code>setup()</code>. Although this can work, it should only be called in <code>preload()</code> to ensure the image is fully loaded before any other code is run.");
+        TestResults.addPass("<code>loadImage()</code> is called in setup().");
     }
     if (loadInDraw) {
         TestResults.addFail("<code>loadImage()</code> should not be called in <code>draw()</code> because it will repeatedly load the image.");
     }
-    if (!loadInPreload && !loadInSetup && !loadInDraw) {
-        TestResults.addWarning("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>preload()</code>, <code>setup()</code>, or <code>draw()</code>).");
+    if (!loadInSetup && !loadInDraw) {
+        TestResults.addFail("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>setup()</code> or <code>draw()</code>).");
     }
+    await advanceToFrame(1)
+    checkCanvasSize(512, 410);
+    TestResults.addPass(`Frame count is ${frameCount}`)
     const imgOnLoad = new TestImage(width / 2, height / 2, width, height, 1024, 820, CENTER);
     checkImageProperties(imgOnLoad, [...getShapes()]);
     imgOnLoad.x -= 0.5;
     imgOnLoad.y -= 0.5;
     imgOnLoad.w++;
     imgOnLoad.h++;
-    advanceToFrame(frameCount+1);
+    await advanceToFrame(frameCount+1);
     checkImageProperties(imgOnLoad, [...getShapes()]);
-    advanceToFrame(1000);
+    await advanceToFrame(1000);
     imgOnLoad.x = width / 2 - 922 / 2;
     imgOnLoad.y = height / 2 - 820 / 2;
     imgOnLoad.w = 922;

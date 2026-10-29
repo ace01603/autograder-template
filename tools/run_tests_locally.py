@@ -22,7 +22,6 @@ STAGING = "staging"
 AUTOGRADER_TESTS = "autograderTests"
 NODE_MODULES = "node_modules"
 P5JS = "p5js"
-TESTING_DEPENDENCIES = "testingDependencies"
 PACKAGE_LOCK = "package-lock.json"
 PACKAGE = "package.json"
 PLAYWRIGHT_CONFIG = "playwright.config.js"
@@ -44,7 +43,6 @@ def setup_sketch_folders(solution_folders):
         if os.path.isdir(sketch_folder):
             shutil.copytree(STAGING + "/" + AUTOGRADER_TESTS, sketch_folder + "/" + AUTOGRADER_TESTS)
             shutil.copytree(STAGING + "/" + P5JS, sketch_folder + "/" + P5JS)
-            shutil.copytree(STAGING + "/" + TESTING_DEPENDENCIES, sketch_folder + "/" + TESTING_DEPENDENCIES)
             shutil.copyfile(STAGING + "/" + PACKAGE_LOCK, sketch_folder + "/" + PACKAGE_LOCK)
             shutil.copyfile(STAGING + "/" + PACKAGE, sketch_folder + "/" + PACKAGE)
             shutil.copyfile(STAGING + "/" + PLAYWRIGHT_CONFIG, sketch_folder + "/" + PLAYWRIGHT_CONFIG)
@@ -95,7 +93,6 @@ def clean_up(solution_folders):
             shutil.rmtree(sketch_folder + "/" + AUTOGRADER_TESTS)
             shutil.rmtree(sketch_folder + "/" + NODE_MODULES)
             shutil.rmtree(sketch_folder + "/" + P5JS)
-            shutil.rmtree(sketch_folder + "/" + TESTING_DEPENDENCIES)
             os.remove(sketch_folder + "/" + PACKAGE_LOCK)
             os.remove(sketch_folder + "/" + PACKAGE)
             os.remove(sketch_folder + "/" + PLAYWRIGHT_CONFIG)
@@ -118,7 +115,7 @@ def filter_sketches(samples, to_test):
 
 if __name__ == "__main__":
     # Choose a subset of sketches to test or leave empty to test them all
-    selected_sketches = []# ["sketch1"]
+    selected_sketches = ["sketch3"]
     # delete previous test results
     if os.path.exists(SAMPLE_SOLUTIONS + "/" + LOCAL_TEST_RESULTS):
         os.remove(SAMPLE_SOLUTIONS + "/" + LOCAL_TEST_RESULTS)

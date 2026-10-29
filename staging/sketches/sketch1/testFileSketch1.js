@@ -1,4 +1,4 @@
-import { TestResults, canvasStatus, substituteDraw, checkCanvasSize, checkBackground } from "../../testingDependencies/test-utils.js";
+import { TestResults, canvasStatus, substituteDraw, checkCanvasSize, checkBackground } from "https://cdn.jsdelivr.net/gh/Supportive-IDE/p5js-testing-demo@latest/p5jsTestingLibrary.js";
 
 /*** EXERCISE-SPECIFIC TEST FUNCTIONS. These functions are called from runTests() below. */
 
@@ -15,7 +15,7 @@ function waitForP5() {
     if (canvases.length > 0) { // p5.js has loaded i.e. drawn a canvas
         clearInterval(loadTimer); // Stop the timer
         canvases[0].style.pointerEvents = "none"; // prevents p5.js from responding to mouse events independent of the tests
-        substituteDraw(); 
+        // substituteDraw(); 
         for (const e of canvasStatus.errors) {
             TestResults.addFail(`In frame ${frameCount}, ${e}`);
         }
