@@ -52,51 +52,58 @@ function completeTests(visibility = false) {
  * @param {HTMLElement} canvas The HTML canvas created by p5.js
  */
 async function runTests(canvas) {
+    // The try - catch is optional but will catch errors in the tests e.g. calling a test function that doesn't exist.
+    try {
 
-    // YOUR TESTS HERE. Write unit test functions then use TestResults static methods to show test results e.g.:
-    // Tests can take any format but they must end by storing either a pass or a fail in the TestResults instance as shown below.
-    // The messages passed to addPass / addFail will be displayed to the student.
-    // TestResults.addPass("This test passed.");
-    // TestResults.addFail("This test failed.");
-    // TestResults.addWarning("This is a warning.");
-    // Some common tests are already defined in ../testingDependencies/test-utils.js e.g.:
-    
-    // Some of these tests, like checkCanvasSize already store the result in TestResults so you do not have to specify feedback.
-    // To write tests, you should have a good understanding of automated software testing.
-    // If you don't, here is an overview https://www.geeksforgeeks.org/automation-testing-software-testing/
-    
-    const loadInSetup = testSettingIsCalled(LOAD_IMAGE.re, true, false);
-    const loadInDraw = testSettingIsCalled(LOAD_IMAGE.re, false, true);
-    if (loadInSetup) {
-        TestResults.addPass("<code>loadImage()</code> is called in setup().");
+        // YOUR TESTS HERE. Write unit test functions then use TestResults static methods to show test results e.g.:
+        // Tests can take any format but they must end by storing either a pass or a fail in the TestResults instance as shown below.
+        // The messages passed to addPass / addFail will be displayed to the student.
+        // TestResults.addPass("This test passed.");
+        // TestResults.addFail("This test failed.");
+        // TestResults.addWarning("This is a warning.");
+        // Some common tests are already defined in ../testingDependencies/test-utils.js e.g.:
+        
+        // Some of these tests, like checkCanvasSize already store the result in TestResults so you do not have to specify feedback.
+        // To write tests, you should have a good understanding of automated software testing.
+        // If you don't, here is an overview https://www.geeksforgeeks.org/automation-testing-software-testing/
+        
+        const loadInSetup = testSettingIsCalled(LOAD_IMAGE.re, true, false);
+        const loadInDraw = testSettingIsCalled(LOAD_IMAGE.re, false, true);
+        if (loadInSetup) {
+            TestResults.addPass("<code>loadImage()</code> is called in setup().");
+        }
+        if (loadInDraw) {
+            TestResults.addFail("<code>loadImage()</code> should not be called in <code>draw()</code> because it will repeatedly load the image.");
+        }
+        if (!loadInSetup && !loadInDraw) {
+            TestResults.addFail("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>setup()</code> or <code>draw()</code>).");
+        }
+        await advanceToFrame(1)
+        checkCanvasSize(512, 410);
+        TestResults.addPass(`Frame count is ${frameCount}`)
+        const imgOnLoad = new TestImage(width / 2, height / 2, width, height, 1024, 820, CENTER);
+        checkImageProperties(imgOnLoad, [...getShapes()]);
+        imgOnLoad.x -= 0.5;
+        imgOnLoad.y -= 0.5;
+        imgOnLoad.w++;
+        imgOnLoad.h++;
+        await advanceToFrame(frameCount+1);
+        checkImageProperties(imgOnLoad, [...getShapes()]);
+        await advanceToFrame(1000);
+        imgOnLoad.x = width / 2 - 922 / 2;
+        imgOnLoad.y = height / 2 - 820 / 2;
+        imgOnLoad.w = 922;
+        imgOnLoad.h = 820;
+        checkImageProperties(imgOnLoad, [...getShapes()]);
     }
-    if (loadInDraw) {
-        TestResults.addFail("<code>loadImage()</code> should not be called in <code>draw()</code> because it will repeatedly load the image.");
+    catch (e) {
+        TestResults.addFail(`Unable to run tests: ${e.toString()}`);
     }
-    if (!loadInSetup && !loadInDraw) {
-        TestResults.addFail("<code>loadImage()</code> does not appear to be called (this test will not detect usage of <code>loadImage()</code> outside <code>setup()</code> or <code>draw()</code>).");
+    finally {
+        // DO NOT DELETE This statement must be last - makes test results available to Playwright
+        // pass true to completeTests() to make test output visible to students in Gradescope
+        completeTests(true);
     }
-    await advanceToFrame(1)
-    checkCanvasSize(512, 410);
-    TestResults.addPass(`Frame count is ${frameCount}`)
-    const imgOnLoad = new TestImage(width / 2, height / 2, width, height, 1024, 820, CENTER);
-    checkImageProperties(imgOnLoad, [...getShapes()]);
-    imgOnLoad.x -= 0.5;
-    imgOnLoad.y -= 0.5;
-    imgOnLoad.w++;
-    imgOnLoad.h++;
-    await advanceToFrame(frameCount+1);
-    checkImageProperties(imgOnLoad, [...getShapes()]);
-    await advanceToFrame(1000);
-    imgOnLoad.x = width / 2 - 922 / 2;
-    imgOnLoad.y = height / 2 - 820 / 2;
-    imgOnLoad.w = 922;
-    imgOnLoad.h = 820;
-    checkImageProperties(imgOnLoad, [...getShapes()]);
-
-    // DO NOT DELETE This statement must be last - makes test results available to Playwright
-    // pass true to completeTests() to make test output visible to students in Gradescope
-    completeTests(true);
 }
 
 // Calls waitForP5() every half second until p5.js finishes loading
