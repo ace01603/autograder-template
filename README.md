@@ -42,9 +42,19 @@ The only files needed in each sketch folder in staging are index.html and the te
 
 **See the existing template index.html files. You should be able to use the contents of an existing file and just update the name of the test file as needed.**
 
-Write your tests in the test file for each sketch, following the format shown in the templates (e.g. sketches/sketch1/testFileSketch1.js). Tests can take any form but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. **Important:** Set the visibility of the tests in the test file. completeTests() is called on the last line of the runTests() function. Pass ```true``` to make the tests visible to students.
+Write your tests in the test file for each sketch, following the format shown in the templates (e.g. sketches/sketch1/testFileSketch1.js). Your test file should import the functions that you need from our library: [https://cdn.jsdelivr.net/gh/Supportive-IDE/p5js-testing-demo@latest/p5jsTestingLibrary.js](https://cdn.jsdelivr.net/gh/Supportive-IDE/p5js-testing-demo@latest/p5jsTestingLibrary.js). At a minimum, you will need to import:
 
-You will find lots of utility functions and some pre-defined tests for common functionality (e.g. checking the canvas is a specified size) in staging/testingDependencies/test-utils.js. These functions are toward the bottom of test-utils in two regions: "GENERAL PURPOSE FUNCTIONS" and "GENERIC TESTS THAT MIGHT BE USEFUL".
+- ```TestResults```: A class that tracks and presents test results.
+
+Other functions and objects that are commonly needed are:
+- ```canvasStatus```: An object that keeps track of what has been drawn on the canvas in the current frame.
+- ```getShapes()```: A function that gets information about all shapes drawn on the canvas in the current frame.
+- ```advanceToFrame(frameNumber)```: An asynchronous function that can be used to advance the sketch to a specific frame. Use with ```await```.
+
+
+You will find lots of utility functions (e.g. setting mouse position, simulating events) and some pre-defined tests for common functionality (e.g. checking the canvas is a specified size) in the p5jsTestingLibrary linked above. These functions are toward the bottom of test-utils in two regions: "GENERAL PURPOSE FUNCTIONS" and "GENERIC TESTS THAT MIGHT BE USEFUL".
+
+Tests can take any form but each test should result in a pass or fail with a student-facing message, which is then added to the TestResults object as shown in the comments in testFile.js. **Important:** Set the visibility of the tests in the test file. completeTests() is called on the last line of the runTests() function. Pass ```true``` to make the tests visible to students.
 
 ## Run your tests locally
 Before uploading the autograder to Gradescope, you should test your tests by running them on a selection of sample solutions e.g. a fully correct solution and solutions with each potential problem you are testing for.
